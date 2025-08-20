@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVSEC - AFIS Imperatriz (SBIZ)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .content-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-link.active {
+            background-color: #2D3748; /* Cor de fundo para item ativo */
+            color: #E2E8F0;
+            border-left: 4px solid #3B82F6;
+        }
+        .nav-link {
+            border-left: 4px solid transparent;
+        }
+        .flowchart-step {
+            position: relative;
+            padding-left: 2.5rem;
+            padding-bottom: 2rem;
+        }
+        .flowchart-step:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background-color: #E2E8F0;
+        }
+        .flowchart-step::after {
+            content: '';
+            position: absolute;
+            left: calc(1rem - 0.5rem);
+            top: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background-color: #3B82F6;
+            border: 3px solid #F1F5F9;
+        }
+        .table-row-hover:hover {
+            background-color: #E2E8F0;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-slate-700">
+
+    <div class="flex min-h-screen bg-gray-100">
+        <aside class="w-64 bg-slate-800 text-slate-200 flex flex-col fixed h-full md:relative md:translate-x-0 transform -translate-x-full transition-transform duration-300 ease-in-out z-50" id="sidebar">
+            <div class="p-6 border-b border-slate-700">
+                <h1 class="text-2xl font-bold text-center">Manual AFIS SBIZ</h1>
+                <p class="text-xs text-slate-400 text-center mt-1">Ref. Rápida Operacional</p>
+            </div>
+            <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                <a href="#avsec" class="nav-link flex items-center px-4 py-3 rounded-lg transition-all duration-200 hover:bg-slate-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-blue-400" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.944c-1.664-1.262-3.874-1.156-5.43.43-1.68 1.695-1.68 4.433 0 6.128l5.43 5.438 5.43-5.438c1.68-1.695 1.68-4.433 0-6.128-1.556-1.586-3.766-1.692-5.43-.43zM9 11a1 1 0 112 0v2a1 1 0 11-2 0v-2zm2-3a1 1 0 00-1-1H9a1 1 0 100 2h1a1 1 0 001-1z" /></svg>
+                    AVSEC
+                </a>
+                <a href="#emvoo" class="nav-link flex items-center px-4 py-3 rounded-lg transition-all duration-200 hover:bg-slate-700">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-blue-400" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
+                    Aeronave em Voo
+                </a>
+                <a href="#nosolo" class="nav-link flex items-center px-4 py-3 rounded-lg transition-all duration-200 hover:bg-slate-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-blue-400" viewBox="0 0 20 20" fill="currentColor"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" /></svg>
+                    Aeronave no Solo
+                </a>
+                <a href="#qbrn" class="nav-link flex items-center px-4 py-3 rounded-lg transition-all duration-200 hover:bg-slate-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-blue-400" viewBox="0 0 20 20" fill="currentColor"><path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" /></svg>
+                    Ameaça QBRN
+                </a>
+                <a href="#evacuacao" class="nav-link flex items-center px-4 py-3 rounded-lg transition-all duration-200 hover:bg-slate-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-blue-400" viewBox="0 0 20 20" fill="currentColor"><path d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" /></svg>
+                    Evacuação
+                </a>
+                <a href="#anexos-circea" class="nav-link flex items-center px-4 py-3 rounded-lg transition-all duration-200 hover:bg-slate-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-blue-400" viewBox="0 0 20 20" fill="currentColor"><path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4zm4 6a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" /></svg>
+                    Anexos CIRCEA 100-56
+                </a>
+                <a href="#acionar" class="nav-link flex items-center px-4 py-3 rounded-lg transition-all duration-200 hover:bg-slate-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-blue-400" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
+                    Quem Acionar
+                </a>
+            </nav>
+        </aside>
+        
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center z-40">
+                <button id="menu-button" class="text-gray-500 focus:outline-none md:hidden">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <h2 class="text-2xl font-bold text-slate-700" id="main-title">Visão Geral de Segurança da Aviação Civil (AVSEC)</h2>
+            </header>
+
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4 md:p-8 lg:p-12">
+                
+                <section id="avsec" class="content-section">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 text-slate-700 border-b pb-2">Visão Geral de Segurança da Aviação Civil (AVSEC)</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">Esta seção detalha os procedimentos e responsabilidades para assegurar o monitoramento, controle de acesso e segurança das instalações da DNB em Imperatriz (SBIZ), conforme as normativas vigentes.</p>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                <h4 class="font-semibold text-xl mb-2 text-slate-700">Controle de Acesso</h4>
+                                <ul class="list-disc list-inside space-y-2 text-gray-700 leading-relaxed">
+                                    <li>Porta de entrada da DNB deve permanecer <strong>fechada e trancada</strong>.</li>
+                                    <li>Áreas restritas (Sala Técnica e AFIS) com acesso controlado por biometria e chave.</li>
+                                    <li>Acesso de pessoas externas deve ser registrado em formulário eletrônico próprio.</li>
+                                    <li>Porte ostensivo da credencial aeroportuária é <strong>compulsório</strong>.</li>
+                                    <li>Em caso de extravio de credencial, informar imediatamente Gerente e Agente Local AVSEC.</li>
+                                </ul>
+                            </div>
+                            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                <h4 class="font-semibold text-xl mb-2 text-slate-700">Monitoramento</h4>
+                                <ul class="list-disc list-inside space-y-2 text-gray-700 leading-relaxed">
+                                    <li>Sistema de CFTV monitora entrada, saída de emergência e áreas internas.</li>
+                                    <li>Gravações armazenadas por <strong>15 dias</strong> em servidor com acesso restrito.</li>
+                                    <li>Qualquer anormalidade deve ser comunicada ao Gerente Local AVSEC.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h4 class="font-semibold text-xl mt-8 mb-4 text-slate-700">Vistorias, Testes e Exercícios</h4>
+                         <div class="overflow-x-auto">
+                            <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                                <thead class="bg-slate-700 text-white">
+                                    <tr>
+                                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Atividade</th>
+                                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Frequência</th>
+                                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Responsável</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-gray-700">
+                                    <tr class="border-b table-row-hover">
+                                        <td class="py-3 px-4">Vistoria de Segurança AVSEC</td>
+                                        <td class="py-3 px-4">Anual</td>
+                                        <td class="py-3 px-4">Agente AVSEC</td>
+                                    </tr>
+                                    <tr class="bg-gray-50 border-b table-row-hover">
+                                        <td class="py-3 px-4">Teste de Intrusão</td>
+                                        <td class="py-3 px-4">Anual</td>
+                                        <td class="py-3 px-4">Agente AVSEC</td>
+                                    </tr>
+                                    <tr class="border-b table-row-hover">
+                                        <td class="py-3 px-4">Teste de Falso Credenciamento</td>
+                                        <td class="py-3 px-4">Anual</td>
+                                        <td class="py-3 px-4">Agente Local AVSEC</td>
+                                    </tr>
+                                    <tr class="bg-gray-50 table-row-hover">
+                                        <td class="py-3 px-4">ESAB (Exercício Simulado de Ameaça de Bomba)</td>
+                                        <td class="py-3 px-4">A cada 2 anos</td>
+                                        <td class="py-3 px-4">Gerente e Agente Local AVSEC</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="emvoo" class="content-section">
+                     <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 text-slate-700 border-b pb-2">Procedimentos para Interferência Ilícita - Aeronave em Voo</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">Ações imediatas a serem tomadas pela RDO-IZ em caso de apoderamento ilícito ou ameaça de bomba com aeronave em voo.</p>
+                        
+                        <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-md mb-6" role="alert">
+                            <p class="font-bold">Ação Crítica</p>
+                            <p>A prioridade máxima é manter a segurança da navegação aérea e prestar toda a assistência possível à aeronave afetada.</p>
+                        </div>
+                        
+                        <h4 class="font-semibold text-xl mb-4 text-slate-700">Passos Iniciais</h4>
+                        <div class="space-y-6">
+                            <div class="flowchart-step">
+                                <h5 class="font-semibold text-lg text-slate-800">1. Identificar Sinais</h5>
+                                <p class="text-gray-600 ml-2">Acionamento do código transponder <strong>7500</strong>, desvio anormal da rota, ou silêncio rádio.</p>
+                            </div>
+                            <div class="flowchart-step">
+                                <h5 class="font-semibold text-lg text-slate-800">2. Comunicação Imediata</h5>
+                                <p class="text-gray-600 ml-2">Informar  <strong>ACC</strong>, <strong>CGNA</strong> e <strong>Gerente da DNB</strong>.</p>
+                            </div>
+                            <div class="flowchart-step">
+                                <h5 class="font-semibold text-lg text-slate-800">3. Aumentar Separação</h5>
+                                <p class="text-gray-600 ml-2">Dobrar os mínimos de separação vertical e horizontal entre a aeronave ameaçada e as demais.</p>
+                            </div>
+                            <div class="flowchart-step">
+                                <h5 class="font-semibold text-lg text-slate-800">4. Manter Escuta e Assistência</h5>
+                                <p class="text-gray-600 ml-2">Manter escuta na frequência, retransmitir informações ao ACC, alocar frequência exclusiva se possível e atender prontamente às solicitações da tripulação.</p>
+                            </div>
+                             <div class="flowchart-step">
+                                <h5 class="font-semibold text-lg text-slate-800">5. Ameaça de Bomba/QBRN</h5>
+                                <p class="text-gray-600 ml-2">Confirmar informações com o piloto <strong>sem dar sugestões</strong> sobre o artefato. Usar fraseologia: <code class="bg-gray-200 text-slate-700 p-1 rounded font-mono">MAYDAY, MAYDAY, MAYDAY, [INDICATIVO], AMEAÇA DE BOMBA</code>.</p>
+                            </div>
+                            <div class="flowchart-step">
+                                <h5 class="font-semibold text-lg text-slate-800">6. Registrar Tudo</h5>
+                                <p class="text-gray-600 ml-2">Registrar meticulosamente todos os eventos e comunicações no <strong>Livro de Registro de Ocorrências (LRO)</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="nosolo" class="content-section">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 text-slate-700 border-b pb-2">Procedimentos para Interferência Ilícita - Aeronave no Solo</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">Ações imediatas a serem tomadas pela RDO-IZ em caso de apoderamento ilícito ou ameaça de bomba com aeronave no solo.</p>
+
+                        <h4 class="font-semibold text-xl mb-4 text-slate-700">Apoderamento Ilícito no Solo</h4>
+                        <ol class="list-decimal list-inside space-y-3 text-gray-700 leading-relaxed">
+                            <li>Notificar imediatamente o <strong>ACC AZ</strong> e o <strong>APOC</strong> (Centro de Operações Aeroportuárias).</li>
+                            <li>Atuar como elo de comunicação, retransmitindo informações entre a aeronave e os órgãos de controle.</li>
+                            <li>Obter detalhes: número de pessoas a bordo, feridos, exigências dos perpetradores.</li>
+                            <li>Coordenar com a Administração Aeroportuária (AAL) para isolar a área.</li>
+                            <li>Registrar todas as ocorrências no <strong>LRO</strong>.</li>
+                        </ol>
+
+                        <h4 class="font-semibold text-xl mt-8 mb-4 text-slate-700">Ameaça de Bomba no Solo</h4>
+                         <ol class="list-decimal list-inside space-y-3 text-gray-700 leading-relaxed">
+                            <li>Notificar imediatamente o <strong>ACC AZ</strong> e o <strong>APOC</strong>, informando localização da aeronave e detalhes da ameaça.</li>
+                            <li>Instruir o piloto a taxiar para uma área de estacionamento isolada, se possível e seguro.</li>
+                            <li class="font-semibold text-red-600">Evitar uso desnecessário do rádio se houver suspeita de bomba ativada por rádio.</li>
+                            <li>Seguir os procedimentos do <strong>Plano de Emergência do Aeródromo (PLEM)</strong>.</li>
+                            <li>Interromper ou desviar o tráfego aéreo e terrestre nas proximidades.</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <section id="qbrn" class="content-section">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 text-slate-700 border-b pb-2">Ameaça Química, Biológica, Radiológica e Nuclear (QBRN)</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">Procedimentos operacionais para órgãos ATS em eventos envolvendo materiais QBRN, conforme CIRCEA 100-58.</p>
+
+                        <div class="bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-md mb-6" role="alert">
+                            <p class="font-bold">Comunicação é Chave</p>
+                            <p>A coordenação com o Centro de Operações Militares (COpM) é o passo mais crítico em qualquer evento QBRN.</p>
+                        </div>
+
+                        <h4 class="font-semibold text-xl mb-4 text-slate-700">Protocolo de Ação QBRN</h4>
+                        <ol class="list-decimal list-inside space-y-4 text-gray-700 leading-relaxed">
+                            <li><strong>Comunicação Inicial:</strong> Ao tomar ciência da ocorrência (real ou suspeita), informar <strong>IMEDIATAMENTE</strong> o <strong>COpM</strong> da área.</li>
+                            <li><strong>Separação de Segurança:</strong> Separar a aeronave envolvida das demais por, no mínimo, o <strong>dobro</strong> da separação regulamentar.</li>
+                            <li><strong>Seguir Orientações:</strong> Proceder estritamente conforme as orientações do COpM, especialmente quanto ao aeródromo de pouso e local de estacionamento.</li>
+                            <li><strong>Direcionamento:</strong> Direcionar a aeronave para o local definido para facilitar a descontaminação.</li>
+                            <li><strong>Interdição de Pista:</strong> Após o pouso, em coordenação com COpM e CGNA, interditar a pista utilizada.</li>
+                            <li><strong>Manter Serviços:</strong> Manter os serviços de tráfego aéreo para as outras aeronaves na área de responsabilidade.</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <section id="evacuacao" class="content-section">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 text-slate-700 border-b pb-2">Procedimentos de Evacuação e Contingências</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">Planos de ação para evacuação da DNB e contingências operacionais do órgão AFIS.</p>
+
+                        <h4 class="font-semibold text-xl mb-4 text-slate-700">Plano de Evacuação da DNB</h4>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700 leading-relaxed">
+                            <li>O plano de evacuação é acionado em caso de ameaça de artefato explosivo, QBRN, ou outras situações de risco iminente.</li>
+                            <li>A autoridade responsável por emitir a ordem de evacuação deve ser claramente definida nos procedimentos locais.</li>
+                            <li>Os procedimentos devem detalhar para qual órgão a responsabilidade dos serviços será transferida.</li>
+                            <li>Devem existir meios para notificar a situação às aeronaves em voo e no solo.</li>
+                            <li>Simulações de evacuação e contingência devem ser realizadas regularmente.</li>
+                        </ul>
+
+                        <h4 class="font-semibold text-xl mt-8 mb-4 text-slate-700">Plano de Degradação do Órgão AFIS</h4>
+                        <p class="text-gray-600 mb-4 leading-relaxed">Contingências para falhas em sistemas críticos:</p>
+                        <div class="grid md:grid-cols-2 gap-4 text-base">
+                            <ul class="list-disc list-inside space-y-1 text-gray-700 leading-relaxed">
+                                <li>Suporte de energia elétrica</li>
+                                <li>Sistemas de climatização e iluminação</li>
+                                <li>Serviço móvel aeronáutico (VHF)</li>
+                                <li>Serviço fixo aeronáutico (Telefonia, AMHS)</li>
+                            </ul>
+                            <ul class="list-disc list-inside space-y-1 text-gray-700 leading-relaxed">
+                                <li>Sistema de gravação (RAT 1000/3000)</li>
+                                <li>Auxílios à navegação (VOR/DME)</li>
+                                <li>Auxílios visuais luminosos (PAPI, Balizamento)</li>
+                                <li>Serviço de meteorologia</li>
+                            </ul>
+                        </div>
+                         <p class="text-gray-600 mt-4 leading-relaxed">Cada cenário de falha possui procedimentos específicos detalhados no Modelo Operacional para mitigar o impacto nas operações.</p>
+                    </div>
+                </section>
+                
+                <section id="anexos-circea" class="content-section">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 text-slate-700 border-b pb-2">Anexos CIRCEA 100-56</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">Esta seção contém os anexos da CIRCEA 100-56, que detalham os procedimentos e formulários a serem utilizados pelos órgãos ATS em casos de atos de interferência ilícita contra a aviação civil.</p>
+                        
+                        <div class="mb-8">
+                             <h4 class="font-semibold text-xl mt-6 mb-4 text-slate-700">Guia Rápido de Uso dos Anexos</h4>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                                    <thead class="bg-slate-700 text-white">
+                                        <tr>
+                                            <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Anexo</th>
+                                            <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Situação de Uso</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-gray-700">
+                                        <tr class="border-b table-row-hover">
+                                            <td class="py-3 px-4">Anexo A</td>
+                                            <td class="py-3 px-4">Procedimentos para apoderamento ilícito de aeronave no <strong>solo</strong>.</td>
+                                        </tr>
+                                        <tr class="bg-gray-50 border-b table-row-hover">
+                                            <td class="py-3 px-4">Anexo B</td>
+                                            <td class="py-3 px-4">Procedimentos para apoderamento ilícito de aeronave em <strong>voo</strong>.</td>
+                                        </tr>
+                                        <tr class="border-b table-row-hover">
+                                            <td class="py-3 px-4">Anexo C</td>
+                                            <td class="py-3 px-4">Ameaça de artefato explosivo/QBRN em aeronave no <strong>solo</strong>.</td>
+                                        </tr>
+                                        <tr class="bg-gray-50 border-b table-row-hover">
+                                            <td class="py-3 px-4">Anexo D</td>
+                                            <td class="py-3 px-4">Ameaça de artefato explosivo/QBRN em aeronave em <strong>voo</strong>.</td>
+                                        </tr>
+                                        <tr class="border-b table-row-hover">
+                                            <td class="py-3 px-4">Anexo E</td>
+                                            <td class="py-3 px-4">Quando o órgão for orientado a notificar uma aeronave no solo sobre uma ameaça.</td>
+                                        </tr>
+                                        <tr class="bg-gray-50 border-b table-row-hover">
+                                            <td class="py-3 px-4">Anexo F</td>
+                                            <td class="py-3 px-4">Quando o órgão for orientado a notificar uma aeronave em voo sobre uma ameaça.</td>
+                                        </tr>
+                                        <tr class="border-b table-row-hover">
+                                            <td class="py-3 px-4">Anexo G</td>
+                                            <td class="py-3 px-4">Guia para quem recebe uma ameaça de bomba (telefone).</td>
+                                        </tr>
+                                        <tr class="bg-gray-50 border-b table-row-hover">
+                                            <td class="py-3 px-4">Anexo H</td>
+                                            <td class="py-3 px-4">Formulário para relatar ameaças de bomba.</td>
+                                        </tr>
+                                        <tr class="border-b table-row-hover">
+                                            <td class="py-3 px-4">Anexo I</td>
+                                            <td class="py-3 px-4">Formulário para relatar atos de interferência ilícita.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                <h4 class="font-semibold text-xl mb-4 text-slate-700">ANEXO A - Ações a serem adotadas por TWR/AFIS no caso de apoderamento ilícito de aeronave no solo</h4>
+                                <ol class="list-decimal list-inside space-y-2 text-gray-700 text-sm leading-relaxed">
+                                    <li>Estar atento para identificar quaisquer indícios de ato de interferência ilícita, tais como: acionamento do código transponder 7500 ou não atendimento às instruções dos órgãos ATS.</li>
+                                    <li>Comunicar imediatamente ao ACC em cuja FIR esteja situado o aeroporto envolvido e à Administração Aeroportuária, que, por sua vez, comunicará ao explorador da aeronave ou ao seu representante indicado.</li>
+                                    <li>Comunicar, também, ao CGNA e ao Chefe do Órgão.</li>
+                                    <li>Auxiliar a Administração Aeroportuária, atuando como facilitador das comunicações disponíveis no órgão ATS.</li>
+                                    <li>Retransmitir as mensagens apropriadas, entre a aeronave e as autoridades designadas.</li>
+                                    <li>Alocar, caso possível, uma frequência exclusiva para comunicação com a aeronave.</li>
+                                    <li>Restringir ao estritamente necessário a veiculação de mensagens por outras aeronaves, por intermédio da frequência que estiver sendo utilizada.</li>
+                                    <li>Atender, prontamente, às chamadas da aeronave, dando assistência ao desenvolvimento de suas operações.</li>
+                                    <li>Tomar as medidas necessárias para a permanência da aeronave no solo, assim como aquelas em atenção às orientações provenientes da autoridade competente, designada pela AAR ou Grupo de Decisão, conforme o caso.</li>
+                                    <li>Orientar a aeronave a se deslocar para o ponto remoto do aeroporto, adotando as demais ações pertinentes, de acordo com o PSA e as orientações da autoridade competente.</li>
+                                    <li>Caso não exista um ponto remoto predefinido ou a referida posição não esteja disponível, orientar a aeronave a se deslocar para uma área escolhida, conforme previsto no PSA ou, ainda, como definido pelo Gerente de Segurança Aeroportuária ou por outra autoridade competente.</li>
+                                    <li>Especificar a trajetória a ser seguida para o local de estacionamento. Essa trajetória deverá estar prevista no PSA ou, ainda, ser definida pelo Gerente de Segurança Aeroportuária ou por outra autoridade competente, tendo em vista a minimizar quaisquer riscos para o público, às demais aeronaves e às instalações do aeródromo.</li>
+                                    <li>Durante o desembarque de passageiros e da tripulação da aeronave ameaçada, manter outras aeronaves, veículos e pessoal de terra, a uma distância segura da aeronave envolvida, conforme previsto no PSA ou, ainda, como definido pelo Gerente de Segurança Aeroportuária ou por outra autoridade competente.</li>
+                                    <li>Orientar o trânsito de veículos e pessoas, conforme previsto no PSA ou, ainda, como definido pelo Gerente de Segurança Aeroportuária ou por outra autoridade competente, de forma a minimizar qualquer risco iminente, dando prioridade àqueles envolvidos na emergência.</li>
+                                </ol>
+                            </div>
+                            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                <h4 class="font-semibold text-xl mb-4 text-slate-700">ANEXO B - Ações a serem adotadas por ACC/APP/TWR/AFIS no caso de apoderamento ilícito de aeronave em voo (onde couber)</h4>
+                                <ol class="list-decimal list-inside space-y-2 text-gray-700 text-sm leading-relaxed">
+                                    <li>Estar atento para identificar quaisquer indícios de ato de interferência ilícita, tais como: acionamento do código transponder 7500, desvio anormal da rota prevista ou não atendimento às instruções dos órgãos ATC.</li>
+                                    <li>Aumentar os mínimos de separação vertical e horizontal aplicados para, pelo menos, o dobro entre a aeronave ameaçada e as demais, onde aplicável.</li>
+                                    <li>TWR/AFIS – Comunicar imediatamente ao APP, ao CGNA e ao Chefe do Órgão. APP - Comunicar imediatamente ao ACC, ao CGNA e ao Chefe do Órgão. ACC - Comunicar ao Comandante/Chefe do CINDACTA/SRPV-SP, ao CGNA, ao COpM e ao ARCC da área envolvida, em cuja FIR a aeronave esteja desenvolvendo seu voo ou na qual esteja situado o aeroporto envolvido.</li>
+                                    <li>Solicitar ao CGNA a comunicação ao representante pertinente da Administração Aeroportuária para onde se dirige a aeronave, que, por sua vez, comunicará ao explorador da aeronave ou a seu representante.</li>
+                                    <li>Manter informado o CGNA, o COpM e o ARCC sobre qualquer nova ação realizada pela aeronave em questão.</li>
+                                    <li>Auxiliar a Administração Aeroportuária, atuando como facilitador das comunicações disponíveis no órgão ATS, em coordenação com o COpM.</li>
+                                    <li>Retransmitir as mensagens apropriadas, entre a aeronave e as autoridades designadas.</li>
+                                    <li>Alocar, caso possível, uma frequência exclusiva para comunicação com a aeronave.</li>
+                                    <li>Restringir ao estritamente necessário a veiculação de mensagens por outras aeronaves, por intermédio da frequência que estiver sendo utilizada.</li>
+                                    <li>Atender prontamente às chamadas das aeronaves, dando assistência ao desenvolvimento de suas operações.</li>
+                                    <li>Aprovar, tão logo quanto possível, qualquer solicitação feita pela tripulação para subir ou descer, com a finalidade de equalizar ou reduzir o diferencial entre a pressão do ar exterior e a pressão do ar na cabine.</li>
+                                    <li>No caso de transferência do tráfego para outro órgão ATS nacional ou estrangeiro, deverão ser fornecidos todos os dados relacionados com o voo.</li>
+                                    <li>Manter informados os órgãos ATS que possam estar envolvidos com a progressão do voo sobre todos os fatores pertinentes, tais como, autonomia de combustível da aeronave, possibilidade de mudanças repentinas de rota ou de destino etc. Os órgãos ATS mencionados incluem, também, aqueles nacionais ou estrangeiros responsáveis tanto pela transferência do tráfego, como pelo aeródromo de destino conhecido ou suposto do voo em questão.</li>
+                                    <li>Prestar toda a assistência à aeronave no caso da intenção de pouso em qualquer aeroporto em território nacional, para garantir a segurança do voo, levando em conta a possibilidade de um pouso de emergência, e tomar as decisões apropriadas para agilizar as fases do voo, inclusive o pouso, se possível, evitando o sobrevoo de áreas densamente povoadas, em coordenação com o COpM.</li>
+                                    <li>Fornecer à aeronave em voo, se necessário, autorização para o novo destino, sem atraso, de acordo com as orientações da autoridade competente.</li>
+                                </ol>
+                            </div>
+                            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                <h4 class="font-semibold text-xl mb-4 text-slate-700">ANEXO C - Ações a serem adotadas por TWR/AFIS quando a aeronave no solo avisar sobre ameaça de artefato explosivo ou QBRN a bordo</h4>
+                                <ol class="list-decimal list-inside space-y-2 text-gray-700 text-sm leading-relaxed">
+                                    <li>Ao ser avisado, confirmar as informações do piloto, visando à comunicação com os organismos pertinentes relacionados a seguir.</li>
+                                    <li>Não dar quaisquer orientações nem sugestões no que diz respeito a ações que serão tomadas pela tripulação em relação a um artefato explosivo ou QBRN.</li>
+                                    <li>Comunicar imediatamente ao ACC em cuja FIR esteja situado o aeroporto envolvido e à Administração Aeroportuária, que, por sua vez, comunicará ao explorador da aeronave ou ao seu representante indicado.</li>
+                                    <li>Comunicar, também, ao Chefe do Órgão, assim como manter informado o CGNA e a Administração Aeroportuária sobre qualquer nova ação realizada pela aeronave em questão.</li>
+                                    <li>Auxiliar a Administração Aeroportuária, atuando como facilitador das comunicações disponíveis no órgão ATS.</li>
+                                    <li>Retransmitir as mensagens apropriadas, entre a aeronave e as autoridades designadas.</li>
+                                    <li>Alocar, caso possível, uma frequência exclusiva para comunicação com a aeronave.</li>
+                                    <li>Restringir ao estritamente necessário a veiculação de mensagens por outras aeronaves, por intermédio de frequência que estiver sendo utilizada.</li>
+                                    <li>Atender prontamente às chamadas das aeronaves, dando assistência ao desenvolvimento de suas operações.</li>
+                                    <li>Tomar as medidas necessárias para a permanência da aeronave no solo, assim como aquelas em atenção às orientações provenientes da autoridade competente, designada pela AAR ou Grupo de Decisão, conforme o caso.</li>
+                                    <li>Orientar a aeronave a se deslocar para o ponto remoto do aeroporto, adotando as demais ações pertinentes, de acordo com o PSA e as orientações da autoridade competente.</li>
+                                    <li>Caso não exista um ponto remoto predefinido ou a referida posição não esteja disponível, orientar a aeronave a se deslocar para uma área escolhida, conforme previsto no PSA ou, ainda, como definido pelo Gerente de Segurança Aeroportuária ou por outra autoridade competente.</li>
+                                    <li>Especificar a trajetória a ser seguida para o local de estacionamento. Essa trajetória deverá estar prevista no PSA ou, ainda, ser definida pelo Gerente de Segurança Aeroportuária ou por outra autoridade competente, tendo em vista minimizar quaisquer riscos para o público, as outras aeronaves e as instalações do aeródromo.</li>
+                                    <li>Durante o desembarque de passageiros e da tripulação da aeronave ameaçada, manter outras aeronaves, veículos e pessoal de terra, a uma distância segura da aeronave envolvida, conforme previsto no PSA ou, ainda, como definido pelo Gerente de Segurança Aeroportuária ou por outra autoridade competente.</li>
+                                    <li>Orientar o trânsito de veículos e pessoas, conforme previsto no PSA ou, ainda, como definido pelo Gerente de Segurança Aeroportuária ou por outra autoridade competente, de forma a minimizar qualquer risco iminente, dando prioridade àqueles envolvidos na emergência.</li>
+                                </ol>
+                            </div>
+                             <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                <h4 class="font-semibold text-xl mb-4 text-slate-700">ANEXO D - Ações a serem adotadas por ACC/APP/TWR/AFIS quando a aeronave em voo avisar sobre ameaça de artefato explosivo ou QBRN a bordo (onde couber)</h4>
+                                <ol class="list-decimal list-inside space-y-2 text-gray-700 text-sm leading-relaxed">
+                                    <li>Ao ser avisado, confirmar as informações do piloto, visando à comunicação com os organismos pertinentes relacionados a seguir.</li>
+                                    <li>Não dar quaisquer orientações nem sugestões no que diz respeito a ações que serão tomadas pela tripulação em relação a um artefato explosivo ou artefato QBRN.</li>
+                                    <li>Aumentar os mínimos de separação vertical e horizontal aplicados para, pelo menos, o dobro entre a aeronave ameaçada e as demais (onde aplicável).</li>
+                                    <li>TWR/AFIS – Comunicar imediatamente ao APP, ao CGNA e ao Chefe do Órgão. A P P - Comunicar imediatamente ao ACC, ao CGNA e ao Chefe do Órgão. ACC - Comunicar ao Comandante/Chefe do CINDACTA/SRPV-SP, ao CGNA, ao COpM e ao ARCC da área envolvida, em cuja FIR a aeronave esteja desenvolvendo seu voo.</li>
+                                    <li>Solicitar ao CGNA a comunicação ao representante pertinente da Administração Aeroportuária para onde se dirige a aeronave, que, por sua vez, comunicará ao explorador da aeronave ou a seu representante.</li>
+                                    <li>Manter informado o CGNA, o COpM e o ARCC sobre qualquer nova ação realizada pela aeronave em questão.</li>
+                                    <li>Auxiliar a Administração Aeroportuária, atuando como facilitador das comunicações disponíveis no órgão ATS, em coordenação com o COpM.</li>
+                                    <li>Retransmitir as mensagens apropriadas, entre a aeronave e as autoridades designadas.</li>
+                                    <li>Alocar, caso possível, uma frequência exclusiva para comunicação com a aeronave.</li>
+                                    <li>Restringir ao estritamente necessário a veiculação de mensagens por outras aeronaves, por intermédio de frequência que estiver sendo utilizada.</li>
+                                    <li>Atender prontamente às chamadas das aeronaves, dando assistência ao desenvolvimento de suas operações.</li>
+                                    <li>Aprovar, tão logo quanto possível, qualquer solicitação feita pela tripulação para subir ou descer, com a finalidade de equalizar ou reduzir o diferencial entre a pressão do ar exterior e a pressão do ar na cabine.</li>
+                                    <li>No caso de transferência do tráfego para outros órgãos ATC (nacional ou estrangeiro), devem ser fornecidos todos os dados relacionados com o voo.</li>
+                                    <li>Manter informados os órgãos ATS que possam ser afetados pela progressão do voo sobre todos os fatores pertinentes, tais como: autonomia de combustível da aeronave, possibilidade de mudanças repentinas de rota ou destino etc. Os órgãos ATS mencionados incluem, também, aqueles nacionais ou estrangeiros responsáveis tanto pela transferência do tráfego, como pelo aeródromo de destino conhecido ou suposto do voo em questão.</li>
+                                    <li>Prestar toda a assistência à aeronave no caso da intenção de pouso em qualquer aeroporto em território nacional, para garantir a segurança do voo, levando em conta a possibilidade de um pouso de emergência, e tomar as decisões apropriadas para agilizar as fases do voo, inclusive o pouso, se possível, evitando o sobrevoo de áreas densamente povoadas, em coordenação com o COpM.</li>
+                                    <li>Fornecer à aeronave em voo, quando necessário, autorização para o novo destino, sem atraso, de acordo com as orientações da autoridade competente</li>
+                                </ol>
+                            </div>
+                             <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                <h4 class="font-semibold text-xl mb-4 text-slate-700">ANEXO E - Ações a serem adotadas por TWR/AFIS quando este órgão for orientado a avisar que uma aeronave no solo possui uma ameaça de artefato explosivo ou QBRN a bordo</h4>
+                                <ol class="list-decimal list-inside space-y-2 text-gray-700 text-sm leading-relaxed">
+                                    <li>Avisar, sem demora, à tripulação, se em contato direto, ou pelos meios mais eficientes, se for recebida uma informação dos setores apropriados de uma ameaça indicando que um artefato explosivo ou artefato QBRN foi colocado a bordo de uma aeronave conhecida.</li>
+                                    <li>Não dar quaisquer orientações nem sugestões no que diz respeito a ações que serão tomadas pela tripulação em relação a um artefato explosivo ou artefato QBRN.</li>
+                                    <li>Comunicar imediatamente ao ACC em cuja FIR esteja situado o aeroporto envolvido e à Administração Aeroportuária, que, por sua vez, comunicará ao explorador da aeronave ou ao seu representante indicado.</li>
+                                    <li>Comunicar, também, ao Chefe do Órgão, assim como manter informado o CGNA e a Administração Aeroportuária sobre qualquer nova ação realizada pela aeronave em questão.</li>
+                                    <li>Auxiliar a Administração Aeroportuária, atuando como facilitador das comunicações disponíveis no órgão ATS.</li>
+                                    <li>Retransmitir as mensagens apropriadas, entre a aeronave e as autoridades designadas.</li>
+                                    <li>Alocar, caso possível, uma frequência exclusiva para comunicação com a aeronave.</li>
+                                    <li>Restringir ao estritamente necessário a veiculação de mensagens por outras aeronaves, por intermédio de frequência que estiver sendo utilizada.</li>
+                                    <li>Atender prontamente às chamadas das aeronaves, dando assistência ao desenvolvimento de suas operações.</li>
+                                    <li>Tomar as medidas necessárias para a permanência da aeronave no solo, assim como aquelas em atenção às orientações provenientes da autoridade competente, designada pela AAR ou Grupo de Decisão, conforme o caso.</li>
+                                    <li>Orientar a aeronave a se deslocar para o ponto remoto do aeroporto, adotando as demais ações pertinentes, de acordo com o PSA e as orientações da autoridade competente.</li>
+                                    <li>Caso não exista um ponto remoto predefinido ou a referida posição não esteja disponível, orientar a aeronave a se deslocar para uma área escolhida, conforme previsto no PSA ou, ainda, como definido pelo Gerente de Segurança Aeroportuária ou por outra autoridade competente.</li>
+                                    <li>Especificar a trajetória a ser seguida para o local de estacionamento. Essa trajetória deverá estar prevista no PSA ou, ainda, ser definida pelo Gerente de Segurança Aeroportuária ou por outra autoridade competente, tendo em vista minimizar quaisquer riscos para o público, as outras aeronaves e as instalações do aeródromo.</li>
+                                    <li>Durante o desembarque de passageiros e da tripulação da aeronave ameaçada, manter outras aeronaves, veículos e pessoal de terra, a uma distância segura da aeronave envolvida, conforme previsto no PSA ou, ainda, como definido pelo Gerente de Segurança Aeroportuária ou por outra autoridade competente.</li>
+                                    <li>Orientar o trânsito de veículos e pessoas, conforme previsto no PSA ou, ainda, como definido pelo Gerente de Segurança Aeroportuária ou por outra autoridade competente, de forma a minimizar qualquer risco iminente, dando prioridade àqueles envolvidos na emergência.</li>
+                                </ol>
+                            </div>
+                            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                <h4 class="font-semibold text-xl mb-4 text-slate-700">ANEXO F - Ações a serem adotadas por ACC/APP/TWR/AFIS quando este órgão for orientado a avisar que uma aeronave em voo possui uma ameaça de artefato explosivo ou QBRN a bordo (onde couber)</h4>
+                                <ol class="list-decimal list-inside space-y-2 text-gray-700 text-sm leading-relaxed">
+                                    <li>Avisar, sem demora, a tripulação, se em contato direto, conforme orientação da Assessoria de Avaliação de Risco/COE, se for recebida uma informação dos setores apropriados de uma ameaça indicando que um artefato explosivo ou artefato QBRN foi colocado a bordo de uma aeronave conhecida.</li>
+                                    <li>Não dar quaisquer orientações nem sugestões no que diz respeito a ações que serão tomadas pela tripulação em relação a um artefato explosivo ou artefato QBRN.</li>
+                                    <li>Aumentar os mínimos de separação vertical e horizontal aplicados para, pelo menos, o dobro entre a aeronave ameaçada e as demais, onde aplicável.</li>
+                                    <li>TWR/AFIS – Comunicar imediatamente ao APP, ao CGNA e ao Chefe do Órgão. APP - Comunicar imediatamente ao ACC e ao CGNA. ACC - Comunicar ao Comandante/Chefe do CINDACTA/SRPV-SP, ao CGNA, ao COpM e ao ARCC da área envolvida, em cuja FIR a aeronave esteja desenvolvendo seu voo ou na qual esteja situado o aeroporto envolvido.</li>
+                                    <li>Solicitar ao CGNA a comunicação ao representante pertinente da Administração Aeroportuária para onde se dirige a aeronave, que, por sua vez, comunicará ao explorador da aeronave ou a seu representante</li>
+                                    <li>Manter informado o CGNA, o COpM e o ARCC sobre qualquer nova ação realizada pela aeronave em questão.</li>
+                                    <li>Auxiliar a Administração Aeroportuária atuando como facilitador das comunicações disponíveis no órgão ATS, em coordenação com o COpM.</li>
+                                    <li>Retransmitir as mensagens apropriadas, entre a aeronave e as autoridades designadas.</li>
+                                    <li>Alocar, caso possível, uma frequência exclusiva para comunicação com a aeronave.</li>
+                                    <li>Restringir ao estritamente necessário a veiculação de mensagens por outras aeronaves, por intermédio de frequência que estiver sendo utilizada.</li>
+                                    <li>Atender prontamente às chamadas das aeronaves, dando assistência ao desenvolvimento de suas operações.</li>
+                                    <li>Aprovar, tão logo quanto possível, qualquer solicitação feita pela tripulação para subir ou descer, com a finalidade de equalizar ou reduzir o diferencial entre a pressão do ar exterior e a pressão do ar na cabine.</li>
+                                    <li>No caso de transferência do tráfego para outros órgãos ATC (nacional ou estrangeiro), devem ser fornecidos todos os dados relacionados com o voo.</li>
+                                    <li>Manter informados os órgãos ATS que possam ser afetados pela progressão do voo sobre todos os fatores pertinentes, tais como: autonomia de combustível da aeronave, possibilidade de mudanças repentinas de rota ou destino etc. Os órgãos ATS mencionados incluem também aqueles nacionais ou estrangeiros responsáveis tanto pela transferência do tráfego, como pelo aeródromo de destino conhecido ou suposto do voo em questão.</li>
+                                    <li>Prestar toda a assistência a aeronave, no caso da intenção de pouso em qualquer aeroporto em território nacional, para garantir a segurança do voo, levando em conta a possibilidade de um pouso de emergência, e tomar as decisões apropriadas para agilizar as fases do voo, inclusive o pouso, se possível, evitando o sobrevoo de áreas densamente povoadas, em coordenação com o COpM.</li>
+                                    <li>Fornecer à aeronave em voo, quando necessário, autorização para o novo destino, sem atraso, de acordo com as orientações da autoridade competente.</li>
+                                </ol>
+                            </div>
+                            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                <h4 class="font-semibold text-xl mb-4 text-slate-700">ANEXO G - Ações a serem adotadas por quem recebe uma ameaça de bomba</h4>
+                                <ol class="list-decimal list-inside space-y-2 text-gray-700 text-sm leading-relaxed">
+                                    <li>Escutar cuidadosamente e anotar as palavras exatas utilizadas pelo autor da chamada.</li>
+                                    <li>Tomar medidas para rastrear a chamada ou alertar um colega para que o faça.</li>
+                                    <li>Tomar as medidas necessárias para gravar a chamada, quando isso não for feito automaticamente.</li>
+                                    <li>Prolongar a chamada para obter o maior número possível de informações.</li>
+                                    <li>Fazer as seguintes perguntas ao autor da chamada:
+                                        <ul class="list-alpha list-inside pl-6 space-y-1">
+                                            <li>Onde está a bomba? - Primeira pergunta para que a evacuação possa ser planejada;</li>
+                                            <li>Quando a bomba vai explodir? - Visa determinar o tempo para fins de evacuação;</li>
+                                            <li>Qual sua aparência? - Para ajudar a reconhecer o artefato durante uma busca;</li>
+                                            <li>Quem é você? - Para verificar se o autor da chamada pertence a um grupo conhecido; e</li>
+                                            <li>Por que você está fazendo isso? - Para compreender melhor o incidente e manter o autor da chamada na linha, auxiliando o rastreamento da chamada.</li>
+                                        </ul>
+                                    </li>
+                                    <li class="pl-0"><strong>NOTA 1:</strong> As perguntas devem ser feitas de forma aberta, sem direcionar a resposta. Por exemplo, pergunte: “Exatamente onde está a bomba?”, em vez de: “A bomba está no compartimento de carga da aeronave?”</li>
+                                    <li class="pl-0"><strong>NOTA 2:</strong> A ordem em que as perguntas são feitas é importante, pois o autor da chamada pode desligar antes que todas as perguntas possam ser feitas.</li>
+                                    <li>Se possível, testar a credibilidade do chamador criando um número de voo, horário ou localização inexistentes e perguntando a qual deles o autor da chamada está se referindo.</li>
+                                    <li>Informar a um supervisor que, por sua vez, deverá informar ao avaliador de ameaças de bomba designado, à polícia ou aos serviços de segurança.</li>
+                                    <li>Caso a chamada seja recebida de intermediários, deverá:
+                                        <ul class="list-alpha list-inside pl-6 space-y-1">
+                                            <li>perguntar o horário exato em que a ameaça foi recebida e as palavras exatas utilizadas pelo autor da chamada, e tomar nota dessas informações; e</li>
+                                            <li>perguntar se o intermediário obteve respostas para qualquer uma das perguntas detalhadas acima e sobre a origem da chamada e a identidade do chamador.</li>
+                                        </ul>
+                                    </li>
+                                    <li class="pl-0"><strong>NOTA:</strong> Qualquer pessoa que receber alguma comunicação de ameaça de bomba deverá fazer o possível para preservá-la, como guardar o bilhete, gravar a ligação, realizar o “print screen” da tela do equipamento eletrônico etc., e entregá-la ao supervisor respectivo com informações precisas sobre como esta foi descoberta. Os supervisores devem entrevistar quem recebe ameaças de bomba, a fim de preencher o Formulário de Relatório de Ameaças de Bomba disposto no Anexo H e encaminhá-lo, o mais rápido possível, ao avaliador de ameaças de bomba designado.</li>
+                                </ol>
+                            </div>
+                            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                <h4 class="font-semibold text-xl mb-4 text-slate-700">ANEXO H - Formulário de relatório de ameaça de bomba</h4>
+                                <p class="text-gray-700 text-sm leading-relaxed">Este formulário serve como um checklist para registrar detalhes críticos como dados gerais do voo, informações sobre o artefato e exigências do perpetrador, garantindo que nenhum detalhe importante seja perdido durante uma ameaça.</p>
+                            </div>
+                            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                <h4 class="font-semibold text-xl mb-4 text-slate-700">ANEXO I - Formulário de informações relativas a atos de interferência ilícita</h4>
+                                <p class="text-gray-700 text-sm leading-relaxed">Utilizado para registrar todas as informações relacionadas a atos de interferência ilícita, como sequestros. Inclui campos para dados do voo, informações sobre o ato, número de perpetradores e ações tomadas, criando um registro oficial para investigações e comunicação.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="acionar" class="content-section">
+                     <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 text-slate-700 border-b pb-2">Quem Acionar</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">Lista de contatos e entidades para acionamento imediato em diferentes cenários. A agilidade na comunicação é vital.</p>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                                <thead class="bg-slate-700 text-white">
+                                    <tr>
+                                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Cenário</th>
+                                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Acionamento Primário</th>
+                                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Acionamentos Secundários</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-gray-700">
+                                    <tr class="border-b table-row-hover">
+                                        <td class="py-3 px-4 font-medium">Qualquer Ocorrência AVSEC</td>
+                                        <td class="py-3 px-4">Gerente ou Agente Local AVSEC</td>
+                                        <td class="py-3 px-4">Registrar em RELSEC</td>
+                                    </tr>
+                                    <tr class="bg-gray-50 border-b table-row-hover">
+                                        <td class="py-3 px-4 font-medium">Interferência Ilícita (Voo)</td>
+                                        <td class="py-3 px-4">APP, ACC, CGNA</td>
+                                        <td class="py-3 px-4">COpM, Chefe do Órgão</td>
+                                    </tr>
+                                    <tr class="border-b table-row-hover">
+                                        <td class="py-3 px-4 font-medium">Interferência Ilícita (Solo)</td>
+                                        <td class="py-3 px-4">ACC, APOC</td>
+                                        <td class="py-3 px-4">Administração Aeroportuária (AAL)</td>
+                                    </tr>
+                                    <tr class="bg-gray-50 border-b table-row-hover">
+                                        <td class="py-3 px-4 font-medium">Ameaça QBRN</td>
+                                        <td class="py-3 px-4 font-bold text-red-600">COpM (Centro de Operações Militares)</td>
+                                        <td class="py-3 px-4">DIVOC, CGNA</td>
+                                    </tr>
+                                    <tr class="border-b table-row-hover">
+                                        <td class="py-3 px-4 font-medium">Emergência Geral (Aeronave)</td>
+                                        <td class="py-3 px-4">RCC, AAL, SESCINC</td>
+                                        <td class="py-3 px-4">Órgão ATS adjacente, Serviços de emergência</td>
+                                    </tr>
+                                    <tr class="bg-gray-50 table-row-hover">
+                                        <td class="py-3 px-4 font-medium">Acidente Aeronáutico</td>
+                                        <td class="py-3 px-4">CENIPA / SERIPA</td>
+                                        <td class="py-3 px-4">ANAC, AAL, Polícia</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                         <p class="text-sm text-gray-500 mt-4">Consulte o <strong>ANEXO A - TELEFONES ÚTEIS</strong> do Modelo Operacional para a lista de contatos completa.</p>
+                    </div>
+                </section>
+
+                <section id="formularios" class="content-section">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 text-slate-700 border-b pb-2">Formulários e Anexos</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">Acesso rápido aos principais formulários e checklists para registro e controle de ocorrências.</p>
+                        
+                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="border p-6 rounded-xl bg-gray-50 hover:shadow-md transition-shadow">
+                                <h4 class="font-semibold text-lg text-slate-700">RELSEC</h4>
+                                <p class="text-sm text-gray-600 mt-2 leading-relaxed">Relatório de Segurança para registro de ocorrências, ameaças ou perigos AVSEC.</p>
+                            </div>
+                            <div class="border p-6 rounded-xl bg-gray-50 hover:shadow-md transition-shadow">
+                                <h4 class="font-semibold text-lg text-slate-700">LRO</h4>
+                                <p class="text-sm text-gray-600 mt-2 leading-relaxed">Livro de Registro de Ocorrências para registro de todos os eventos durante o turno de serviço.</p>
+                            </div>
+                            <div class="border p-6 rounded-xl bg-gray-50 hover:shadow-md transition-shadow">
+                                <h4 class="font-semibold text-lg text-slate-700">Relatório de Ameaça de Bomba</h4>
+                                <p class="text-sm text-gray-600 mt-2 leading-relaxed">Formulário para coletar informações detalhadas ao receber uma ameaça (Anexo H da CIRCEA 100-56).</p>
+                            </div>
+                            <div class="border p-6 rounded-xl bg-gray-50 hover:shadow-md transition-shadow">
+                                <h4 class="font-semibold text-lg text-slate-700">Info de Interferência Ilícita</h4>
+                                <p class="text-sm text-gray-600 mt-2 leading-relaxed">Formulário para obter e controlar informações sobre atos de interferência ilícita (Anexo I da CIRCEA 100-56).</p>
+                            </div>
+                            <div class="border p-6 rounded-xl bg-gray-50 hover:shadow-md transition-shadow">
+                                <h4 class="font-semibold text-lg text-slate-700">Ficha de Emergência</h4>
+                                <p class="text-sm text-gray-600 mt-2 leading-relaxed">Para estruturar o registro de informações durante um incidente (Anexo B do Modelo AFIS).</p>
+                             </div>
+                             <div class="border p-6 rounded-xl bg-gray-50 hover:shadow-md transition-shadow">
+                                <h4 class="font-semibold text-lg text-slate-700">Checklist de Passagem de Serviço</h4>
+                                <p class="text-sm text-gray-600 mt-2 leading-relaxed">Garante a transferência completa de informações entre turnos (Anexo E do Modelo AFIS).</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+            const mainTitle = document.getElementById('main-title');
+            const sidebar = document.getElementById('sidebar');
+            const menuButton = document.getElementById('menu-button');
+
+            function updateContent(hash) {
+                const targetHash = hash || '#avsec';
+                const targetSection = document.querySelector(targetHash);
+                const activeLink = document.querySelector(`.nav-link[href="${targetHash}"]`);
+
+                contentSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                });
+
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
+                
+                if (activeLink) {
+                    const linkText = activeLink.textContent.trim();
+                    mainTitle.textContent = linkText;
+                    activeLink.classList.add('active');
+                    document.title = linkText + ' - Manual AFIS SBIZ';
+                }
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetHash = this.getAttribute('href');
+                    history.pushState(null, null, targetHash);
+                    updateContent(targetHash);
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.add('-translate-x-full');
+                    }
+                });
+            });
+
+            window.addEventListener('popstate', () => {
+                updateContent(window.location.hash);
+            });
+
+            menuButton.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth < 768 && !sidebar.contains(e.target) && !menuButton.contains(e.target)) {
+                    sidebar.classList.add('-translate-x-full');
+                }
+            });
+            
+            updateContent(window.location.hash);
+        });
+    </script>
+</body>
+</html>
